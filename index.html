@@ -40,7 +40,6 @@
 
         #other_input_container { display: none; margin-top: 10px; }
 
-        /* Красное окошко ошибки */
         #error_box { 
             display: none; background-color: rgba(242, 63, 66, 0.1); border: 1px solid #f23f42; 
             color: #f23f42; border-radius: 8px; padding: 12px; margin-top: 15px; 
@@ -69,7 +68,7 @@
     <div id="form">
         <div class="question">
             <label class="question-title">1. Как вас зовут?<span class="required">*</span></label>
-            <input type="text" class="req-input">
+            <input type="text" id="q1" class="req-input">
         </div>
 
         <div class="question">
@@ -88,30 +87,30 @@
         <div class="question">
             <label class="question-title">3. Как вы оцениваете свое РП-поведение (для РП)</label>
             <div class="list-group">
-                <label class="list-item"><span>1ур. (Базовый)</span><input type="radio" name="rp" value="1"></label>
-                <label class="list-item"><span>2ур. (Средний)</span><input type="radio" name="rp" value="2"></label>
-                <label class="list-item"><span>3ур. (Выше среднего)</span><input type="radio" name="rp" value="3"></label>
-                <label class="list-item"><span>4ур. (Высокий)</span><input type="radio" name="rp" value="4"></label>
-                <label class="list-item"><span>5ур. (Профессионал)</span><input type="radio" name="rp" value="5"></label>
+                <label class="list-item"><span>1ур. (Базовый)</span><input type="radio" name="rp" value="1ур. (Базовый)"></label>
+                <label class="list-item"><span>2ур. (Средний)</span><input type="radio" name="rp" value="2ур. (Средний)"></label>
+                <label class="list-item"><span>3ур. (Выше среднего)</span><input type="radio" name="rp" value="3ур. (Выше среднего)"></label>
+                <label class="list-item"><span>4ур. (Высокий)</span><input type="radio" name="rp" value="4ур. (Высокий)"></label>
+                <label class="list-item"><span>5ур. (Профессионал)</span><input type="radio" name="rp" value="5ур. (Профессионал)"></label>
             </div>
         </div>
 
         <div class="question">
             <label class="question-title">4. Какие жанры игр у вас любимые?</label>
-            <input type="text" class="req-input">
+            <input type="text" id="q4" class="req-input">
         </div>
 
         <div class="question">
             <label class="question-title">5. В какие игры/режимы любите играть?</label>
-            <input type="text" class="req-input">
+            <input type="text" id="q5" class="req-input">
         </div>
 
         <div class="question">
             <label class="question-title">6. С какого устройства играете?</label>
             <div class="list-group">
-                <label class="list-item"><span>Мобильное устройство</span><input type="radio" name="device" value="Mobile" onclick="toggleOther(false)"></label>
-                <label class="list-item"><span>Ноутбук</span><input type="radio" name="device" value="Laptop" onclick="toggleOther(false)"></label>
-                <label class="list-item"><span>ПК</span><input type="radio" name="device" value="PC" onclick="toggleOther(false)"></label>
+                <label class="list-item"><span>Мобильное устройство</span><input type="radio" name="device" value="Мобильное устройство" onclick="toggleOther(false)"></label>
+                <label class="list-item"><span>Ноутбук</span><input type="radio" name="device" value="Ноутбук" onclick="toggleOther(false)"></label>
+                <label class="list-item"><span>ПК</span><input type="radio" name="device" value="ПК" onclick="toggleOther(false)"></label>
                 <label class="list-item"><span>Другое</span><input type="radio" name="device" value="Other" onclick="toggleOther(true)"></label>
             </div>
             <div id="other_input_container">
@@ -121,44 +120,65 @@
     </div>
 
     <div id="error_box">Нужно заполнить все пункты!</div>
-    <button class="submit-btn" onclick="validateForm()">Отправить</button>
+    <button class="submit-btn" onclick="validateAndSend()">Отправить</button>
 
     <script>
         function toggleOther(show) {
             document.getElementById('other_input_container').style.display = show ? 'block' : 'none';
         }
 
-        function validateForm() {
-            const inputs = document.querySelectorAll('.req-input');
-            const radios = ['age', 'rp', 'device'];
+        async function validateAndSend() {
             const errorBox = document.getElementById('error_box');
-            let isValid = true;
+            
+            const name = document.getElementById('q1').value;
+            const age = document.querySelector('input[name="age"]:checked')?.value;
+            const rp = document.querySelector('input[name="rp"]:checked')?.value;
+            const genres = document.getElementById('q4').value;
+            const roblox = document.getElementById('q5').value;
+            const deviceRadio = document.querySelector('input[name="device"]:checked')?.value;
+            const otherText = document.getElementById('other_text').value;
 
-            // Проверка текстовых полей
-            inputs.forEach(input => {
-                if (input.value.trim() === "") isValid = false;
-            });
+            let finalDevice = deviceRadio === "Other" ? otherText : deviceRadio;
 
-            // Проверка радио-кнопок
-            radios.forEach(name => {
-                if (!document.querySelector(`input[name="${name}"]:checked`)) isValid = false;
-            });
-
-            // Проверка поля "Другое"
-            const otherRadio = document.querySelector('input[value="Other"]:checked');
-            if (otherRadio && document.getElementById('other_text').value.trim() === "") {
-                isValid = false;
+            if (!name || !age || !rp || !genres || !roblox || !finalDevice) {
+                errorBox.style.display = 'block';
+                return;
             }
 
-            if (!isValid) {
-                errorBox.style.display = 'block';
-                window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
-            } else {
-                errorBox.style.display = 'none';
-                alert("Анкета успешно отправлена!");
+            errorBox.style.display = 'none';
+
+            // ДАННЫЕ ДЛЯ ДИСКОРДА
+            const webhookUrl = "https://discord.com/api/webhooks/1499696514799374447/YEaUZ7n5ycDn1WT_Euq0kh9IFy7B4J3f_CKgNriyb43X6I22_E2p1N-30JyZmSTD9Y2Z";
+            const message = {
+                embeds: [{
+                    title: "Новая анкета игрока!",
+                    color: 5814783,
+                    fields: [
+                        { name: "Имя", value: name },
+                        { name: "Возраст", value: age + " лет" },
+                        { name: "РП уровень", value: rp },
+                        { name: "Жанры", value: genres },
+                        { name: "Игры/Режимы", value: roblox },
+                        { name: "Устройство", value: finalDevice }
+                    ]
+                }]
+            };
+
+            try {
+                await fetch(webhookUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(message)
+                });
+                
+                alert("Анкета отправлена! Окно закроется.");
+                window.close(); // Попытка закрыть вкладку
+                // Если window.close не сработает (защита браузера), перенаправим:
+                setTimeout(() => { window.location.href = "https://discord.com"; }, 500);
+            } catch (e) {
+                alert("Ошибка при отправке.");
             }
         }
     </script>
-
 </body>
 </html>
