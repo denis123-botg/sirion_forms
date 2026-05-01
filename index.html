@@ -21,7 +21,7 @@
 
         input[type="text"] { 
             width: 100%; background-color: #000000; border: none; border-radius: 12px; 
-            padding: 16px; color: white; box-sizing: border-box; font-size: 15px;
+            padding: 16px; color: white; box-sizing: border-box; font-size: 15px; margin-top: 5px;
         }
 
         .list-group { background-color: #2b2d31; border-radius: 16px; overflow: hidden; }
@@ -32,19 +32,19 @@
         .list-item:last-child { border-bottom: none; }
         .list-item span { font-size: 16px; color: white; }
         
-        /* Стилизация радио-кнопок под Дискорд */
         input[type="radio"] { 
             appearance: none; width: 22px; height: 22px; border: 2px solid #b5bac1; 
             border-radius: 50%; outline: none; cursor: pointer; transition: 0.2s;
         }
         input[type="radio"]:checked { border: 6px solid #5865f2; background-color: white; }
 
+        #other_input_container { display: none; margin-top: 10px; }
+
         .submit-btn { 
             background-color: #5865f2; color: white; border: none; padding: 16px; 
             width: 100%; border-radius: 28px; font-size: 16px; font-weight: 600; 
-            cursor: pointer; margin-top: 10px; transition: background 0.2s;
+            cursor: pointer; margin-top: 10px; margin-bottom: 30px;
         }
-        .submit-btn:active { background-color: #4752c4; }
     </style>
 </head>
 <body>
@@ -56,12 +56,12 @@
 
     <div class="warning-box">
         <div class="warning-icon">⚠️</div>
-        <div class="warning-text">Эта форма будет получена приложением Forms. Не указывайте свои пароли и прочую конфиденциальную информацию.</div>
+        <div class="warning-text">Данная анкета полностью кондифенциальна, информация из неё не будет распространятся без согласия человека который ее заполнял!</div>
     </div>
 
     <div class="question">
         <label class="question-title">1. Как вас зовут?<span class="required">*</span></label>
-        <input type="text" placeholder="">
+        <input type="text">
     </div>
 
     <div class="question">
@@ -78,7 +78,7 @@
     </div>
 
     <div class="question">
-        <label class="question-title">3.Как вы оцениваете свое РП-поведение (для РП)</label>
+        <label class="question-title">3. Как вы оцениваете свое РП-поведение (для РП)</label>
         <div class="list-group">
             <label class="list-item"><span>1ур. (Базовый)</span><input type="radio" name="rp" value="1"></label>
             <label class="list-item"><span>2ур. (Средний)</span><input type="radio" name="rp" value="2"></label>
@@ -89,7 +89,7 @@
     </div>
 
     <div class="question">
-        <label class="question-title">4.Какие жанры игр у вас любимые?</label>
+        <label class="question-title">4. Какие жанры игр у вас любимые?</label>
         <input type="text">
     </div>
 
@@ -98,7 +98,26 @@
         <input type="text">
     </div>
 
+    <div class="question">
+        <label class="question-title">6. С какого устройства играете?</label>
+        <div class="list-group">
+            <label class="list-item"><span>Мобильное устройство</span><input type="radio" name="device" value="Mobile" onclick="toggleOther(false)"></label>
+            <label class="list-item"><span>Ноутбук</span><input type="radio" name="device" value="Laptop" onclick="toggleOther(false)"></label>
+            <label class="list-item"><span>ПК</span><input type="radio" name="device" value="PC" onclick="toggleOther(false)"></label>
+            <label class="list-item"><span>Другое</span><input type="radio" name="device" value="Other" id="other_radio" onclick="toggleOther(true)"></label>
+        </div>
+        <div id="other_input_container">
+            <input type="text" id="other_text" placeholder="Напишите свой вариант">
+        </div>
+    </div>
+
     <button class="submit-btn">Отправить</button>
+
+    <script>
+        function toggleOther(show) {
+            document.getElementById('other_input_container').style.display = show ? 'block' : 'none';
+        }
+    </script>
 
 </body>
 </html>
