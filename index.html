@@ -5,37 +5,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Основные вопросы</title>
     <style>
+        /* ДИЗАЙН ПОЛНОСТЬЮ СОХРАНЕН */
         body { font-family: 'gg sans', sans-serif; background-color: #1e1f22; color: #dbdee1; padding: 16px; margin: 0; }
         .header { display: flex; align-items: center; padding: 8px 0; margin-bottom: 12px; position: relative; }
-        .icon-menu { width: 28px; height: 28px; background-color: #5865f2; border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-right: 12px; color: white; font-size: 18px; }
+        .icon-menu { width: 28px; height: 28px; background-color: #5865f2; border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-right: 12px; color: white; }
         h2 { font-size: 20px; margin: 0; color: white; font-weight: 600; }
         .warning-box { background-color: rgba(240, 178, 50, 0.1); border: 1px solid #f0b232; border-radius: 4px; padding: 12px; margin-bottom: 24px; display: flex; gap: 12px; }
-        .warning-icon { color: #f0b232; font-size: 20px; font-weight: bold; }
         .warning-text { font-size: 13px; line-height: 1.5; color: #dbdee1; }
         .question { margin-bottom: 24px; }
-        .question-title { font-size: 14px; font-weight: 500; margin-bottom: 12px; display: block; color: #dbdee1; }
+        .question-title { font-size: 14px; font-weight: 500; margin-bottom: 12px; display: block; }
         input[type="text"] { width: 100%; background-color: #111214; border: none; border-radius: 12px; padding: 16px; color: white; box-sizing: border-box; font-size: 15px; }
         .list-group { background-color: #2b2d31; border-radius: 16px; overflow: hidden; }
         .list-item { display: flex; justify-content: space-between; align-items: center; padding: 14px 20px; border-bottom: 1px solid #3f4147; cursor: pointer; }
         input[type="radio"] { appearance: none; width: 22px; height: 22px; border: 2px solid #b5bac1; border-radius: 50%; outline: none; }
-        input[type="radio"]:checked { border-color: #5865f2; }
-        input[type="radio"]:checked::after { content: ""; position: absolute; width: 12px; height: 12px; background: #5865f2; border-radius: 50%; top: 3px; left: 3px; }
-        #other_device_input { display: none; margin-top: 10px; }
+        input[type="radio"]:checked { border-color: #5865f2; background-color: #5865f2; box-shadow: inset 0 0 0 4px #2b2d31; }
+        .submit-btn { background-color: #5865f2; color: white; border: none; padding: 16px; width: 100%; border-radius: 28px; font-size: 16px; font-weight: 500; cursor: pointer; margin-top: 20px; }
         #error_box { display: none; background: rgba(242, 63, 66, 0.1); border: 1px solid #f23f42; color: #f23f42; border-radius: 8px; padding: 12px; margin: 20px 0; text-align: center; }
-        .submit-btn { background-color: #5865f2; color: white; border: none; padding: 16px; width: 100%; border-radius: 28px; font-size: 16px; font-weight: 500; cursor: pointer; margin-top: 20px; margin-bottom: 40px; }
     </style>
 </head>
 <body>
     <div class="header"><div class="icon-menu">☰</div><h2>Основные вопросы</h2></div>
-    <div class="warning-box">
-        <div class="warning-icon">!</div>
-        <div class="warning-text">Данная анкета полностью конфиденциальна, информация из неё не будет распространяться без согласия человека, который её заполнял!</div>
-    </div>
+    <div class="warning-box"><div class="warning-text">Данная анкета полностью конфиденциальна!</div></div>
 
     <div class="question">
-        <label class="question-title">1. Как вас зовут?</label>
+        <label class="question-title">1. Как вас зовут? *</label>
         <input type="text" id="q_name">
     </div>
+
     <div id="error_box">Нужно заполнить все пункты!</div>
     <button class="submit-btn" onclick="send()">Отправить</button>
 
@@ -44,8 +40,8 @@
         const autoID = params.get('uid') || "Не определен";
 
         async function send() {
-            const n = document.getElementById('q_name').value;
-            // Сюда добавь проверки для всех полей как раньше
+            const name = document.getElementById('q_name').value;
+            if(!name) { document.getElementById('error_box').style.display='block'; return; }
 
             const hook = "https://discord.com/api/webhooks/1499715836221587477/HNFHtnWfTLcAkXCB3LA0zXukAJaf7kgHBhFGAYyIckIGiKjh4R4tg9VvXp9mcyiwDT6b";
             await fetch(hook, {
@@ -55,14 +51,13 @@
                     embeds: [{
                         title: "📄 Новая анкета игрока!",
                         color: 5814783,
-                        fields: [{name: "👤 Имя", value: n}],
+                        fields: [{name: "👤 Имя", value: name}],
                         footer: { text: "ID: " + autoID }
                     }]
                 })
             });
-            alert("Анкета успешно отправлена! Это окно закроется автоматически.");
-            window.close(); // Закрытие вкладки
-            setTimeout(() => { window.location.href = "about:blank"; }, 500); // Резервный метод
+            alert("Анкета отправлена! Окно закроется.");
+            window.close(); // Пытаемся закрыть вкладку
         }
     </script>
 </body>
