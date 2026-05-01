@@ -15,7 +15,6 @@
         .warning-text { font-size: 13px; color: #dbdee1; line-height: 1.4; }
         .question { margin-bottom: 25px; }
         .question-title { font-size: 15px; font-weight: 500; margin-bottom: 12px; display: block; }
-        .required { color: #f23f42; margin-left: 2px; }
         input[type="text"] { width: 100%; background-color: #000000; border: none; border-radius: 12px; padding: 16px; color: white; box-sizing: border-box; font-size: 15px; margin-top: 5px; }
         .list-group { background-color: #2b2d31; border-radius: 16px; overflow: hidden; }
         .list-item { display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; border-bottom: 1px solid #3f4147; cursor: pointer; }
@@ -34,12 +33,9 @@
         <div class="warning-icon">⚠️</div>
         <div class="warning-text">Данная анкета полностью конфиденциальна, информация из неё не будет распространяться без согласия человека, который её заполнял!</div>
     </div>
+
     <div class="question">
-        <label class="question-title">Ваш Discord ID (цифрами)<span class="required">*</span></label>
-        <input type="text" id="discord_id" placeholder="Напр: 123456789012345678">
-    </div>
-    <div class="question">
-        <label class="question-title">1. Как вас зовут?<span class="required">*</span></label>
+        <label class="question-title">1. Как вас зовут?</label>
         <input type="text" id="q1">
     </div>
     <div class="question">
@@ -76,13 +72,18 @@
         </div>
         <div id="other_input_container"><input type="text" id="other_text" placeholder="Напишите свой вариант"></div>
     </div>
+
     <div id="error_box">Нужно заполнить все пункты!</div>
     <button class="submit-btn" onclick="send()">Отправить</button>
 
     <script>
         function toggleOther(show) { document.getElementById('other_input_container').style.display = show ? 'block' : 'none'; }
+        
         async function send() {
-            const userId = document.getElementById('discord_id').value;
+            // Получаем Discord ID из ссылки (если он там есть) или оставляем пустым
+            const urlParams = new URLSearchParams(window.location.search);
+            const userId = urlParams.get('id') || "Не указан";
+
             const name = document.getElementById('q1').value;
             const age = document.querySelector('input[name="age"]:checked')?.value;
             const rp = document.querySelector('input[name="rp"]:checked')?.value;
@@ -92,7 +93,7 @@
             const other = document.getElementById('other_text').value;
             let device = dev === "Other" ? other : dev;
 
-            if(!userId || !name || !age || !rp || !genres || !roblox || !device) {
+            if(!name || !age || !rp || !genres || !roblox || !device) {
                 document.getElementById('error_box').style.display = 'block';
                 return;
             }
@@ -103,13 +104,14 @@
                 fields: [
                     {name: "Имя", value: name, inline: true}, {name: "Возраст", value: age, inline: true},
                     {name: "РП уровень", value: rp}, {name: "Жанры", value: genres},
-                    {name: "Игры", value: roblox}, {name: "Устройство", value: device}
+                    {name: "Игры", value: roblox}, {name: "Устройство", value: device},
+                    {name: "Ник/ID", value: userId}
                 ],
-                footer: { text: "ID: " + userId }
+                footer: { text: "Анкета от пользователя" }
             }]};
 
             await fetch(webhook, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(data)});
-            alert("Анкета отправлена!");
+            alert("Анкета отправлена! Окно закроется.");
             window.location.href = "https://discord.com";
         }
     </script>
