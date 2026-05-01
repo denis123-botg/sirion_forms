@@ -3,94 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Анкета ЧВК Сирион</title>
+    <title>Анкета Sirion</title>
     <style>
-        body { background: #313338; color: #f2f3f5; font-family: sans-serif; display: flex; justify-content: center; padding: 20px; margin: 0; }
-        .form { background: #2b2d31; padding: 25px; border-radius: 8px; width: 100%; max-width: 450px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); box-sizing: border-box; }
-        h1 { font-size: 20px; text-align: center; margin-bottom: 20px; color: #ffffff; text-transform: uppercase; letter-spacing: 1px; }
-        label { display: block; margin: 15px 0 8px; font-size: 14px; color: #b5bac1; font-weight: bold; }
-        input[type="text"] { width: 100%; padding: 12px; border-radius: 4px; border: 1px solid #1e1f22; background: #1e1f22; color: white; box-sizing: border-box; outline: none; }
-        input[type="text"]:focus { border-color: #5865f2; }
-        
-        .option { background: #383a40; padding: 12px; border-radius: 5px; margin-bottom: 8px; display: flex; align-items: center; cursor: pointer; transition: 0.2s; border: 1px solid transparent; }
-        .option:hover { background: #404249; }
-        .option input[type="radio"] { margin-right: 12px; width: 18px; height: 18px; accent-color: #5865f2; cursor: pointer; }
-        
-        .submit-btn { width: 100%; padding: 14px; background: #5865f2; color: white; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; margin-top: 25px; font-size: 16px; transition: 0.3s; }
-        .submit-btn:hover { background: #4752c4; transform: translateY(-1px); }
-        .submit-btn:active { transform: translateY(0); }
+        body { font-family: sans-serif; background-color: #36393f; color: white; padding: 20px; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        input, select, textarea { width: 100%; padding: 10px; border-radius: 5px; border: none; box-sizing: border-box; }
+        button { background-color: #5865f2; color: white; border: none; padding: 15px; width: 100%; border-radius: 5px; cursor: pointer; font-size: 16px; margin-top: 10px; }
+        button:hover { background-color: #4752c4; }
     </style>
 </head>
 <body>
-
-<div class="form">
-    <h1>ЧВК "СИРИОН"</h1>
+    <h2>Анкета игрока</h2>
     
-    <label>1. ВАШ ПОЗЫВНОЙ / ИМЯ</label>
-    <input type="text" id="name" placeholder="Введите никнейм...">
+    <div class="form-group">
+        <label>Как вас зовут?</label>
+        <input type="text" id="name" placeholder="Ваше имя">
+    </div>
 
-    <label>2. ВАШ ВОЗРАСТ</label>
-    <label class="option"><input type="radio" name="age" value="13-14 лет"> 13-14 лет</label>
-    <label class="option"><input type="radio" name="age" value="15-16 лет"> 15-16 лет</label>
-    <label class="option"><input type="radio" name="age" value="17+ лет"> 17+ лет</label>
+    <div class="form-group">
+        <label>Оценка уровня своего РП-поведения:</label>
+        <select id="rp_level">
+            <option value="1">1ур. (Базовый)</option>
+            <option value="2">2ур. (Средний)</option>
+            <option value="3">3ур. (выше Среднего)</option>
+            <option value="4">4ур. (Высокий)</option>
+            <option value="5">5ур. (Профессионал)</option>
+        </select>
+    </div>
 
-    <label>3. УРОВЕНЬ РП</label>
-    <label class="option"><input type="radio" name="rp" value="1 уровень"> 1 уровень</label>
-    <label class="option"><input type="radio" name="rp" value="2 уровень"> 2 уровень</label>
-    <label class="option"><input type="radio" name="rp" value="3 уровень"> 3 уровень</label>
+    <div class="form-group">
+        <label>В какие жанры игр любите играть (1 жанр минимум):</label>
+        <textarea id="genres" rows="2"></textarea>
+    </div>
 
-    <label>4. УСТРОЙСТВО</label>
-    <label class="option"><input type="radio" name="device" value="ПК / Ноутбук"> ПК / Ноутбук</label>
-    <label class="option"><input type="radio" name="device" value="Телефон / Планшет"> Телефон / Планшет</label>
-
-    <button class="submit-btn" onclick="send()">ОТПРАВИТЬ ДАННЫЕ</button>
-</div>
-
-<script>
-async function send() {
-    const name = document.getElementById('name').value;
-    const age = document.querySelector('input[name="age"]:checked')?.value;
-    const rp = document.querySelector('input[name="rp"]:checked')?.value;
-    const device = document.querySelector('input[name="device"]:checked')?.value;
-
-    if (!name || !age || !rp || !device) {
-        return alert("Ошибка: Заполни все поля анкеты!");
-    }
-
-    const webhookURL = "https://discord.com/api/webhooks/1499696514799374447/YEaUZ7n5ycDn1WT_Euq0kh9IFy7B4J3f_CKgNriyb43X6I22_E2p1N-30JyZmSTD9Y2Z";
-
-    const message = {
-        embeds: [{
-            title: "⚡ НОВАЯ АНКЕТА БОЙЦА",
-            color: 5793266,
-            fields: [
-                { name: "Позывной", value: "**" + name + "**", inline: true },
-                { name: "Возраст", value: age, inline: true },
-                { name: "РП-Уровень", value: rp, inline: true },
-                { name: "Устройство", value: device, inline: true }
-            ],
-            footer: { text: "ЧВК Сирион • Система набора" },
-            timestamp: new Date()
-        }]
-    };
-
-    try {
-        const response = await fetch(webhookURL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(message)
-        });
-        if (response.ok) {
-            alert("Готово! Анкета доставлена в штаб.");
-            window.location.reload(); 
-        } else {
-            alert("Ошибка вебхука. Проверьте настройки.");
-        }
-    } catch (e) {
-        alert("Ошибка сети. Попробуйте еще раз.");
-    }
-}
-</script>
-</body>
-      </html>
-      
+    <div class="form-group">
+        <label>В какие игры/
+            
