@@ -5,19 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Основные вопросы</title>
     <style>
-        /* Полное соответствие стилям Discord со скриншотов */
         body { font-family: 'gg sans', sans-serif; background-color: #1e1f22; color: #dbdee1; padding: 16px; margin: 0; }
         .header { display: flex; align-items: center; padding: 8px 0; margin-bottom: 12px; }
-        .icon-menu { width: 24px; height: 24px; background-color: #5865f2; border-radius: 4px; display: flex; align-items: center; justify-content: center; margin-right: 12px; }
-        .icon-menu:after { content: "≡"; color: white; font-size: 18px; }
+        .icon-menu { width: 24px; height: 24px; background-color: #5865f2; border-radius: 4px; display: flex; align-items: center; justify-content: center; margin-right: 12px; color: white; font-weight: bold; }
         h2 { font-size: 20px; margin: 0; color: white; font-weight: 600; }
         
-        .warning-box { background-color: rgba(240, 178, 50, 0.1); border: 1px solid #f0b232; border-radius: 4px; padding: 12px; margin-bottom: 24px; display: flex; gap: 12px; }
-        .warning-icon { color: #f0b232; font-size: 20px; font-weight: bold; }
-        .warning-text { font-size: 13px; color: #dbdee1; line-height: 1.5; }
+        .warning-box { background-color: rgba(240, 178, 50, 0.1); border: 1px solid #f0b232; border-radius: 8px; padding: 12px; margin-bottom: 24px; display: flex; gap: 12px; }
+        .warning-icon { color: #f0b232; font-size: 18px; font-weight: bold; }
+        .warning-text { font-size: 13px; line-height: 1.4; }
 
         .question { margin-bottom: 24px; }
-        .question-title { font-size: 14px; font-weight: 500; margin-bottom: 12px; display: block; color: #dbdee1; }
+        .question-title { font-size: 14px; font-weight: 500; margin-bottom: 10px; display: block; }
         .required { color: #f23f42; margin-left: 2px; }
 
         input[type="text"] { 
@@ -25,45 +23,27 @@
             padding: 16px; color: white; box-sizing: border-box; font-size: 15px;
         }
 
-        /* Список вариантов (Радио-кнопки) */
-        .list-group { background-color: #2b2d31; border-radius: 16px; overflow: hidden; margin-top: 8px; }
-        .list-item { 
-            display: flex; justify-content: space-between; align-items: center; 
-            padding: 14px 20px; border-bottom: 1px solid #3f4147; cursor: pointer;
-        }
+        .list-group { background-color: #2b2d31; border-radius: 16px; overflow: hidden; }
+        .list-item { display: flex; justify-content: space-between; align-items: center; padding: 14px 20px; border-bottom: 1px solid #3f4147; cursor: pointer; }
         .list-item:last-child { border-bottom: none; }
-        .list-item span { font-size: 15px; color: #dbdee1; }
         
-        input[type="radio"] { 
-            appearance: none; width: 20px; height: 20px; border: 2px solid #b5bac1; 
-            border-radius: 50%; outline: none; cursor: pointer; transition: 0.1s;
-        }
+        input[type="radio"] { appearance: none; width: 20px; height: 20px; border: 2px solid #b5bac1; border-radius: 50%; outline: none; cursor: pointer; }
         input[type="radio"]:checked { border: 6px solid #5865f2; background-color: white; }
 
-        /* Поле "Другое" */
-        #other_device_container { display: none; margin-top: 10px; }
+        #other_input { display: none; margin-top: 10px; }
 
         /* Красное окошко ошибки */
-        #error_box { 
-            display: none; background-color: rgba(242, 63, 66, 0.1); border: 1px solid #f23f42; 
-            color: #f23f42; border-radius: 8px; padding: 12px; margin: 20px 0; 
-            text-align: center; font-weight: 500; font-size: 14px;
+        #error_msg { 
+            display: none; background: rgba(242, 63, 66, 0.1); border: 1px solid #f23f42; 
+            color: #f23f42; padding: 12px; border-radius: 8px; text-align: center; margin-bottom: 15px; font-size: 14px;
         }
 
-        .submit-btn { 
-            background-color: #5865f2; color: white; border: none; padding: 14px; 
-            width: 100%; border-radius: 24px; font-size: 16px; font-weight: 500; 
-            cursor: pointer; margin-top: 10px; margin-bottom: 40px;
-        }
-        .submit-btn:active { background-color: #4752c4; }
+        .submit-btn { background-color: #5865f2; color: white; border: none; padding: 16px; width: 100%; border-radius: 25px; font-size: 16px; font-weight: bold; cursor: pointer; margin-bottom: 40px; }
     </style>
 </head>
 <body>
 
-    <div class="header">
-        <div class="icon-menu"></div>
-        <h2>Основные вопросы</h2>
-    </div>
+    <div class="header"><div class="icon-menu">≡</div><h2>Основные вопросы</h2></div>
 
     <div class="warning-box">
         <div class="warning-icon">!</div>
@@ -78,110 +58,66 @@
     <div class="question">
         <label class="question-title">2. Сколько вам лет?</label>
         <div class="list-group">
-            <label class="list-item"><span>10 лет</span><input type="radio" name="age" value="10"></label>
-            <label class="list-item"><span>11 лет</span><input type="radio" name="age" value="11"></label>
-            <label class="list-item"><span>12 лет</span><input type="radio" name="age" value="12"></label>
-            <label class="list-item"><span>13 лет</span><input type="radio" name="age" value="13"></label>
-            <label class="list-item"><span>14 лет</span><input type="radio" name="age" value="14"></label>
-            <label class="list-item"><span>15 лет</span><input type="radio" name="age" value="15"></label>
-            <label class="list-item"><span>16 лет</span><input type="radio" name="age" value="16"></label>
+            <label class="list-item"><span>10-13 лет</span><input type="radio" name="age" value="10-13"></label>
+            <label class="list-item"><span>14-16 лет</span><input type="radio" name="age" value="14-16"></label>
+            <label class="list-item"><span>17+ лет</span><input type="radio" name="age" value="17+"></label>
         </div>
     </div>
 
     <div class="question">
-        <label class="question-title">3. Как вы оцениваете свое РП-поведение (для РП)</label>
+        <label class="question-title">3. С какого устройства играете?</label>
         <div class="list-group">
-            <label class="list-item"><span>1ур. (Базовый)</span><input type="radio" name="rp" value="1ур. (Базовый)"></label>
-            <label class="list-item"><span>2ур. (Средний)</span><input type="radio" name="rp" value="2ур. (Средний)"></label>
-            <label class="list-item"><span>3ур. (Выше среднего)</span><input type="radio" name="rp" value="3ур. (Выше среднего)"></label>
-            <label class="list-item"><span>4ур. (Высокий)</span><input type="radio" name="rp" value="4ур. (Высокий)"></label>
-            <label class="list-item"><span>5ур. (Профессионал)</span><input type="radio" name="rp" value="5ур. (Профессионал)"></label>
+            <label class="list-item"><span>ПК</span><input type="radio" name="dev" value="ПК" onclick="sh(0)"></label>
+            <label class="list-item"><span>Мобильное устройство</span><input type="radio" name="dev" value="Тел" onclick="sh(0)"></label>
+            <label class="list-item"><span>Ноутбук</span><input type="radio" name="dev" value="Ноут" onclick="sh(0)"></label>
+            <label class="list-item"><span>Другое</span><input type="radio" name="dev" value="other" onclick="sh(1)"></label>
         </div>
+        <input type="text" id="other_input" placeholder="Напишите свое устройство">
     </div>
 
     <div class="question">
-        <label class="question-title">4. Какие жанры игр у вас любимые?</label>
-        <input type="text" id="q_genres">
+        <label class="question-title">Ваш Discord ID (или имя пользователя)<span class="required">*</span></label>
+        <input type="text" id="q_uid">
     </div>
 
-    <div class="question">
-        <label class="question-title">5. В какие игры/режимы любите играть?</label>
-        <input type="text" id="q_games">
-    </div>
-
-    <div class="question">
-        <label class="question-title">6. С какого устройства играете?</label>
-        <div class="list-group">
-            <label class="list-item"><span>Мобильное устройство</span><input type="radio" name="device" value="Мобильное устройство" onclick="toggleOther(false)"></label>
-            <label class="list-item"><span>Ноутбук</span><input type="radio" name="device" value="Ноутбук" onclick="toggleOther(false)"></label>
-            <label class="list-item"><span>ПК</span><input type="radio" name="device" value="ПК" onclick="toggleOther(false)"></label>
-            <label class="list-item"><span>Другое</span><input type="radio" name="device" id="device_other" value="Другое" onclick="toggleOther(true)"></label>
-        </div>
-        <div id="other_device_container">
-            <input type="text" id="q_device_other_text" placeholder="Уточните устройство">
-        </div>
-    </div>
-
-    <div class="question">
-        <label class="question-title">Ваш Discord ID (цифрами)<span class="required">*</span></label>
-        <input type="text" id="q_uid" placeholder="Напр: 1234567890">
-    </div>
-
-    <div id="error_box">Нужно заполнить все пункты!</div>
-
+    <div id="error_msg">Нужно заполнить все пункты!</div>
     <button class="submit-btn" onclick="send()">Отправить</button>
 
     <script>
-        function toggleOther(show) {
-            document.getElementById('other_device_container').style.display = show ? 'block' : 'none';
-        }
+        function sh(v){ document.getElementById('other_input').style.display = v ? 'block' : 'none'; }
 
         async function send() {
-            const name = document.getElementById('q_name').value;
-            const age = document.querySelector('input[name="age"]:checked')?.value;
-            const rp = document.querySelector('input[name="rp"]:checked')?.value;
-            const genres = document.getElementById('q_genres').value;
-            const games = document.getElementById('q_games').value;
-            const uid = document.getElementById('q_uid').value;
-            
-            let device = document.querySelector('input[name="device"]:checked')?.value;
-            if (device === "Другое") {
-                device = "Другое: " + document.getElementById('q_device_other_text').value;
-            }
+            const n = document.getElementById('q_name').value;
+            const a = document.querySelector('input[name="age"]:checked')?.value;
+            const d = document.querySelector('input[name="dev"]:checked')?.value;
+            const u = document.getElementById('q_uid').value;
+            const o = document.getElementById('other_input').value;
 
-            // Проверка заполнения всех полей
-            if(!name || !age || !rp || !genres || !games || !device || !uid || (device.includes("Другое:") && device.length < 9)) {
-                document.getElementById('error_box').style.display = 'block';
+            if(!n || !a || !d || !u) {
+                document.getElementById('error_msg').style.display = 'block';
                 return;
-            } else {
-                document.getElementById('error_box').style.display = 'none';
             }
 
+            const device = d === 'other' ? o : d;
             const hook = "https://discord.com/api/webhooks/1499715836221587477/HNFHtnWfTLcAkXCB3LA0zXukAJaf7kgHBhFGAYyIckIGiKjh4R4tg9VvXp9mcyiwDT6b";
             
-            const data = {
-                embeds: [{
-                    title: "📄 Новая анкета игрока!",
-                    color: 5814783,
-                    fields: [
-                        { name: "👤 Имя", value: name, inline: true },
-                        { name: "🎂 Возраст", value: age, inline: true },
-                        { name: "🏆 РП уровень", value: rp, inline: true },
-                        { name: "🎮 Жанры", value: genres },
-                        { name: "🎲 Игры/Режимы", value: games },
-                        { name: "📱 Устройство", value: device }
-                    ],
-                    footer: { text: "ID: " + uid }
-                }]
-            };
-
-            try {
-                await fetch(hook, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(data)});
-                alert("Анкета успешно отправлена!");
-                window.location.reload();
-            } catch (e) {
-                alert("Ошибка при отправке.");
-            }
+            await fetch(hook, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    embeds: [{
+                        title: "Новая анкета!",
+                        fields: [
+                            {name: "Имя", value: n, inline: true},
+                            {name: "Возраст", value: a, inline: true},
+                            {name: "Устройство", value: device}
+                        ],
+                        footer: { text: "ID: " + u }
+                    }]
+                })
+            });
+            alert("Отправлено!");
+            window.location.reload();
         }
     </script>
 </body>
