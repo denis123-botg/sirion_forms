@@ -25,7 +25,6 @@
 
         .list-group { background-color: #2b2d31; border-radius: 16px; overflow: hidden; }
         .list-item { display: flex; justify-content: space-between; align-items: center; padding: 14px 20px; border-bottom: 1px solid #3f4147; cursor: pointer; }
-        .list-item:last-child { border-bottom: none; }
         .list-item span { font-size: 15px; }
         
         input[type="radio"] { appearance: none; width: 20px; height: 20px; border: 2px solid #b5bac1; border-radius: 50%; outline: none; cursor: pointer; }
@@ -47,7 +46,7 @@
 
     <div class="warning-box">
         <div class="warning-icon">!</div>
-        <div class="warning-text">Данная анкеты полностью конфиденциальна, информация из неё не будет распространяться без согласия человека, который её заполнял!</div>
+        <div class="warning-text">Данная анкета полностью конфиденциальна, информация из неё не будет распространяться без согласия человека, который её заполнял!</div>
     </div>
 
     <div class="question">
@@ -100,15 +99,14 @@
         <input type="text" id="other_device_input" placeholder="Укажите ваше устройство">
     </div>
 
-    <div class="question">
-        <label class="question-title">Ваш Discord ID (цифрами)<span class="required">*</span></label>
-        <input type="text" id="q_uid">
-    </div>
-
     <div id="error_box">Нужно заполнить все пункты!</div>
     <button class="submit-btn" onclick="send()">Отправить</button>
 
     <script>
+        // Считываем ID из ссылки автоматически
+        const params = new URLSearchParams(window.location.search);
+        const autoID = params.get('uid') || "Не определен";
+
         function sh(v){ document.getElementById('other_device_input').style.display = v ? 'block' : 'none'; }
 
         async function send() {
@@ -118,10 +116,9 @@
             const g = document.getElementById('q_genres').value;
             const gm = document.getElementById('q_games').value;
             const d = document.querySelector('input[name="dev"]:checked')?.value;
-            const u = document.getElementById('q_uid').value;
             const o = document.getElementById('other_device_input').value;
 
-            if(!n || !a || !r || !g || !gm || !d || !u) {
+            if(!n || !a || !r || !g || !gm || !d) {
                 document.getElementById('error_box').style.display = 'block';
                 return;
             }
@@ -144,12 +141,12 @@
                             {name: "Игры", value: gm},
                             {name: "Устройство", value: device}
                         ],
-                        footer: { text: "ID: " + u }
+                        footer: { text: "ID: " + autoID }
                     }]
                 })
             });
             alert("Анкета успешно отправлена!");
-            window.location.reload();
+            window.close();
         }
     </script>
 </body>
