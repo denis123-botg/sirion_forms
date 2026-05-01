@@ -12,4 +12,83 @@
         
         .warning-box { background-color: rgba(240, 178, 50, 0.1); border: 1px solid #f0b232; border-radius: 5px; padding: 15px; margin-bottom: 25px; display: flex; align-items: flex-start; }
         .warning-icon { color: #f0b232; margin-right: 10px; font-weight: bold; }
-        
+        .warning-text { font-size: 13px; color: #dbdee1; }
+
+        .question { margin-bottom: 25px; }
+        .question-title { font-size: 15px; font-weight: bold; margin-bottom: 12px; color: #dbdee1; }
+        .required { color: #f23f42; margin-left: 4px; }
+
+        input[type="text"], textarea { 
+            width: 100%; background-color: #000000; border: none; border-radius: 15px; 
+            padding: 15px; color: white; box-sizing: border-box; margin-top: 5px;
+        }
+
+        .radio-group { background-color: #2b2d31; border-radius: 15px; overflow: hidden; }
+        .radio-item { 
+            display: flex; justify-content: space-between; align-items: center; 
+            padding: 15px 20px; border-bottom: 1px solid #3f4147; cursor: pointer;
+        }
+        .radio-item:last-child { border-bottom: none; }
+        .radio-item input { width: 20px; height: 20px; accent-color: #5865f2; }
+
+        .submit-btn { 
+            background-color: #5865f2; color: white; border: none; padding: 16px; 
+            width: 100%; border-radius: 25px; font-size: 16px; font-weight: bold; 
+            cursor: pointer; margin-top: 20px; 
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h2>Основные вопросы</h2>
+    </div>
+
+    <div class="warning-box">
+        <div class="warning-icon">⚠️</div>
+        <div class="warning-text">Эта форма будет получена приложением Forms. Не указывайте свои пароли и прочую конфиденциальную информацию.</div>
+    </div>
+
+    <div class="question">
+        <div class="question-title">1. Как вас зовут?<span class="required">*</span></div>
+        <input type="text">
+    </div>
+
+    <div class="question">
+        <div class="question-title">2. Сколько вам лет</div>
+        <div class="radio-group">
+            <label class="radio-item"><span>10 лет</span><input type="radio" name="age"></label>
+            <label class="radio-item"><span>11 лет</span><input type="radio" name="age"></label>
+            <label class="radio-item"><span>12 лет</span><input type="radio" name="age"></label>
+            <label class="radio-item"><span>13 лет</span><input type="radio" name="age"></label>
+            <label class="radio-item"><span>14 лет</span><input type="radio" name="age"></label>
+            <label class="radio-item"><span>15 лет</span><input type="radio" name="age"></label>
+            <label class="radio-item"><span>16 лет</span><input type="radio" name="age"></label>
+        </div>
+    </div>
+
+    <div class="question">
+        <div class="question-title">3. Как вы оцениваете свое РП-поведение (для РП)</div>
+        <div class="radio-group">
+            <label class="radio-item"><span>1ур. (Базовый)</span><input type="radio" name="rp"></label>
+            <label class="radio-item"><span>2ур. (Средний)</span><input type="radio" name="rp"></label>
+            <label class="radio-item"><span>3ур. (Выше среднего)</span><input type="radio" name="rp"></label>
+            <label class="radio-item"><span>4ур. (Высокий)</span><input type="radio" name="rp"></label>
+            <label class="radio-item"><span>5ур. (Профессионал)</span><input type="radio" name="rp"></label>
+        </div>
+    </div>
+
+    <div class="question">
+        <div class="question-title">4. Какие жанры игр у вас любимые?</div>
+        <input type="text">
+    </div>
+
+    <div class="question">
+        <div class="question-title">5. В какие игры/режимы любите играть?</div>
+        <input type="text">
+    </div>
+
+    <button class="submit-btn">Отправить</button>
+
+</body>
+</html>
