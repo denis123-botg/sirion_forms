@@ -5,42 +5,52 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Основные вопросы</title>
     <style>
-        body { font-family: sans-serif; background-color: #1e1f22; color: #dbdee1; padding: 20px; line-height: 1.5; }
-        .header { display: flex; align-items: center; margin-bottom: 20px; }
-        .icon { background: #5865f2; border-radius: 50%; width: 30px; height: 30px; margin-right: 10px; }
-        h2 { font-size: 20px; margin: 0; color: white; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: #1e1f22; color: #dbdee1; padding: 15px; margin: 0; }
+        .header { display: flex; align-items: center; padding: 10px 0; margin-bottom: 10px; }
+        .icon-circle { width: 32px; height: 32px; background-color: #5865f2; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 12px; }
+        .icon-circle:before { content: "≡"; color: white; font-size: 20px; }
+        h2 { font-size: 20px; margin: 0; color: white; font-weight: 600; }
         
-        .warning-box { background-color: rgba(240, 178, 50, 0.1); border: 1px solid #f0b232; border-radius: 5px; padding: 15px; margin-bottom: 25px; display: flex; align-items: flex-start; }
-        .warning-icon { color: #f0b232; margin-right: 10px; font-weight: bold; }
-        .warning-text { font-size: 13px; color: #dbdee1; }
+        .warning-box { background-color: rgba(240, 178, 50, 0.1); border: 1px solid #f0b232; border-radius: 8px; padding: 12px; margin-bottom: 20px; display: flex; gap: 10px; }
+        .warning-icon { color: #f0b232; font-size: 18px; }
+        .warning-text { font-size: 13px; color: #dbdee1; line-height: 1.4; }
 
         .question { margin-bottom: 25px; }
-        .question-title { font-size: 15px; font-weight: bold; margin-bottom: 12px; color: #dbdee1; }
-        .required { color: #f23f42; margin-left: 4px; }
+        .question-title { font-size: 15px; font-weight: 500; margin-bottom: 12px; display: block; }
+        .required { color: #f23f42; margin-left: 2px; }
 
-        input[type="text"], textarea { 
-            width: 100%; background-color: #000000; border: none; border-radius: 15px; 
-            padding: 15px; color: white; box-sizing: border-box; margin-top: 5px;
+        input[type="text"] { 
+            width: 100%; background-color: #000000; border: none; border-radius: 12px; 
+            padding: 16px; color: white; box-sizing: border-box; font-size: 15px;
         }
 
-        .radio-group { background-color: #2b2d31; border-radius: 15px; overflow: hidden; }
-        .radio-item { 
+        .list-group { background-color: #2b2d31; border-radius: 16px; overflow: hidden; }
+        .list-item { 
             display: flex; justify-content: space-between; align-items: center; 
-            padding: 15px 20px; border-bottom: 1px solid #3f4147; cursor: pointer;
+            padding: 16px 20px; border-bottom: 1px solid #3f4147; cursor: pointer;
         }
-        .radio-item:last-child { border-bottom: none; }
-        .radio-item input { width: 20px; height: 20px; accent-color: #5865f2; }
+        .list-item:last-child { border-bottom: none; }
+        .list-item span { font-size: 16px; color: white; }
+        
+        /* Стилизация радио-кнопок под Дискорд */
+        input[type="radio"] { 
+            appearance: none; width: 22px; height: 22px; border: 2px solid #b5bac1; 
+            border-radius: 50%; outline: none; cursor: pointer; transition: 0.2s;
+        }
+        input[type="radio"]:checked { border: 6px solid #5865f2; background-color: white; }
 
         .submit-btn { 
             background-color: #5865f2; color: white; border: none; padding: 16px; 
-            width: 100%; border-radius: 25px; font-size: 16px; font-weight: bold; 
-            cursor: pointer; margin-top: 20px; 
+            width: 100%; border-radius: 28px; font-size: 16px; font-weight: 600; 
+            cursor: pointer; margin-top: 10px; transition: background 0.2s;
         }
+        .submit-btn:active { background-color: #4752c4; }
     </style>
 </head>
 <body>
 
     <div class="header">
+        <div class="icon-circle"></div>
         <h2>Основные вопросы</h2>
     </div>
 
@@ -50,41 +60,41 @@
     </div>
 
     <div class="question">
-        <div class="question-title">1. Как вас зовут?<span class="required">*</span></div>
-        <input type="text">
+        <label class="question-title">1. Как вас зовут?<span class="required">*</span></label>
+        <input type="text" placeholder="">
     </div>
 
     <div class="question">
-        <div class="question-title">2. Сколько вам лет</div>
-        <div class="radio-group">
-            <label class="radio-item"><span>10 лет</span><input type="radio" name="age"></label>
-            <label class="radio-item"><span>11 лет</span><input type="radio" name="age"></label>
-            <label class="radio-item"><span>12 лет</span><input type="radio" name="age"></label>
-            <label class="radio-item"><span>13 лет</span><input type="radio" name="age"></label>
-            <label class="radio-item"><span>14 лет</span><input type="radio" name="age"></label>
-            <label class="radio-item"><span>15 лет</span><input type="radio" name="age"></label>
-            <label class="radio-item"><span>16 лет</span><input type="radio" name="age"></label>
+        <label class="question-title">2. Сколько вам лет</label>
+        <div class="list-group">
+            <label class="list-item"><span>10 лет</span><input type="radio" name="age" value="10"></label>
+            <label class="list-item"><span>11 лет</span><input type="radio" name="age" value="11"></label>
+            <label class="list-item"><span>12 лет</span><input type="radio" name="age" value="12"></label>
+            <label class="list-item"><span>13 лет</span><input type="radio" name="age" value="13"></label>
+            <label class="list-item"><span>14 лет</span><input type="radio" name="age" value="14"></label>
+            <label class="list-item"><span>15 лет</span><input type="radio" name="age" value="15"></label>
+            <label class="list-item"><span>16 лет</span><input type="radio" name="age" value="16"></label>
         </div>
     </div>
 
     <div class="question">
-        <div class="question-title">3. Как вы оцениваете свое РП-поведение (для РП)</div>
-        <div class="radio-group">
-            <label class="radio-item"><span>1ур. (Базовый)</span><input type="radio" name="rp"></label>
-            <label class="radio-item"><span>2ур. (Средний)</span><input type="radio" name="rp"></label>
-            <label class="radio-item"><span>3ур. (Выше среднего)</span><input type="radio" name="rp"></label>
-            <label class="radio-item"><span>4ур. (Высокий)</span><input type="radio" name="rp"></label>
-            <label class="radio-item"><span>5ур. (Профессионал)</span><input type="radio" name="rp"></label>
+        <label class="question-title">3.Как вы оцениваете свое РП-поведение (для РП)</label>
+        <div class="list-group">
+            <label class="list-item"><span>1ур. (Базовый)</span><input type="radio" name="rp" value="1"></label>
+            <label class="list-item"><span>2ур. (Средний)</span><input type="radio" name="rp" value="2"></label>
+            <label class="list-item"><span>3ур. (Выше среднего)</span><input type="radio" name="rp" value="3"></label>
+            <label class="list-item"><span>4ур. (Высокий)</span><input type="radio" name="rp" value="4"></label>
+            <label class="list-item"><span>5ур. (Профессионал)</span><input type="radio" name="rp" value="5"></label>
         </div>
     </div>
 
     <div class="question">
-        <div class="question-title">4. Какие жанры игр у вас любимые?</div>
+        <label class="question-title">4.Какие жанры игр у вас любимые?</label>
         <input type="text">
     </div>
 
     <div class="question">
-        <div class="question-title">5. В какие игры/режимы любите играть?</div>
+        <label class="question-title">5. В какие игры/режимы любите играть?</label>
         <input type="text">
     </div>
 
