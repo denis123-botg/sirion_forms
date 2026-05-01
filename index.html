@@ -1,116 +1,54 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Анкета</title>
-    <style>
-        body { font-family: sans-serif; background-color: #1e1f22; color: #dbdee1; padding: 15px; margin: 0; }
-        .header { display: flex; align-items: center; margin-bottom: 15px; }
-        .icon { width: 30px; height: 30px; background: #5865f2; border-radius: 50%; margin-right: 10px; }
-        
-        /* Исправленная желтая плашка */
-        .yellow-box { 
-            background: rgba(240, 178, 50, 0.1); 
-            border: 1px solid #f0b232; 
-            padding: 12px; 
-            border-radius: 8px; 
-            font-size: 13px; 
-            margin-bottom: 20px; 
-        }
+import discord
+from discord.ext import commands
+from discord.ui import View, Button
 
-        .q-block { margin-bottom: 20px; }
-        .q-title { font-weight: bold; display: block; margin-bottom: 8px; font-size: 14px; }
-        
-        input[type="text"] { 
-            width: 100%; padding: 14px; background: #000; border: 1px solid #333; 
-            border-radius: 10px; color: #fff; box-sizing: border-box; 
-        }
+TOKEN = 'MTQ5OTY1NzEwMDA0Mzc0NzMzOA.G4iLid.VzycKq-N9F-AaJX6Tf-ghUGh7M-32lmH0SjMXQ'
+ADMIN_CHANNEL = 1216754939616039014
+ROLE_PROCESS = 1259813357763170394
+ROLE_REG = 1259828977942528111
 
-        .list { background: #2b2d31; border-radius: 12px; overflow: hidden; }
-        .item { display: flex; justify-content: space-between; padding: 14px; border-bottom: 1px solid #3f4147; }
-        
-        /* КРАСНОЕ ОКНО ОШИБКИ */
-        #err { 
-            display: none; background: rgba(242, 63, 66, 0.2); border: 1px solid #f23f42; 
-            color: #f23f42; padding: 12px; border-radius: 8px; margin: 10px 0; text-align: center; 
-        }
+intents = discord.Intents.default()
+intents.members = True
+intents.message_content = True
+bot = commands.Bot(command_prefix='!', intents=intents)
 
-        /* КНОПКА ОТПРАВКИ */
-        .btn { 
-            background: #5865f2; color: #fff; border: none; padding: 16px; 
-            width: 100%; border-radius: 25px; font-weight: bold; font-size: 16px; 
-            cursor: pointer; margin-top: 10px; margin-bottom: 30px;
-        }
-    </style>
-</head>
-<body>
+class AdminView(View):
+    def __init__(self, user_id):
+        super().__init__(timeout=None)
+        self.user_id = int(user_id)
 
-    <div class="header"><div class="icon"></div><h2>Основные вопросы</h2></div>
+    @discord.ui.button(label="Принять", style=discord.ButtonStyle.green)
+    async def accept(self, interaction, button):
+        guild = interaction.guild
+        member = guild.get_member(self.user_id)
+        if member:
+            r1, r2 = guild.get_role(ROLE_PROCESS), guild.get_role(ROLE_REG)
+            if r1 in member.roles: await member.remove_roles(r1)
+            await member.add_roles(r2)
+            try: await member.send("Ваша анкета одобрена!")
+            except: pass
+            await interaction.response.send_message(f"✅ {member.mention} принят!", ephemeral=True)
+        else:
+            await interaction.response.send_message("Игрок не найден.", ephemeral=True)
 
-    <div class="yellow-box">
-        Данная анкета полностью конфиденциальна, информация из неё не будет распространяться без согласия человека, который её заполнял!
-    </div>
+    @discord.ui.button(label="Отклонить", style=discord.ButtonStyle.red)
+    async def reject(self, interaction, button):
+        member = interaction.guild.get_member(self.user_id)
+        if member:
+            try: await member.send("Ваша анкета отклонена.")
+            except: pass
+            await interaction.response.send_message(f"❌ {member.mention} отклонен.", ephemeral=True)
 
-    <div class="q-block">
-        <span class="q-title">1. Как вас зовут?</span>
-        <input type="text" id="name">
-    </div>
+@bot.event
+async def on_message(message):
+    if message.channel.id == ADMIN_CHANNEL and message.author.bot:
+        if message.embeds and "Новая анкета" in message.embeds[0].title:
+            uid = message.embeds[0].footer.text.replace("ID: ", "")
+            await message.edit(view=AdminView(uid))
+    await bot.process_commands(message)
 
-    <div class="q-block">
-        <span class="q-title">2. Сколько вам лет?</span>
-        <div class="list">
-            <label class="item"><span>10-13 лет</span><input type="radio" name="age" value="10-13"></label>
-            <label class="item"><span>14-16 лет</span><input type="radio" name="age" value="14-16"></label>
-        </div>
-    </div>
+@bot.event
+async def on_ready():
+    print(f"Бот {bot.user} готов к работе в канале {ADMIN_CHANNEL}")
 
-    <div class="q-block">
-        <span class="q-title">3. РП уровень (1-5)</span>
-        <div class="list">
-            <label class="item"><span>1ур</span><input type="radio" name="rp" value="1"></label>
-            <label class="item"><span>3ур</span><input type="radio" name="rp" value="3"></label>
-            <label class="item"><span>5ур</span><input type="radio" name="rp" value="5"></label>
-        </div>
-    </div>
-
-    <div class="q-block">
-        <span class="q-title">4. Любимые жанры игр?</span>
-        <input type="text" id="genres">
-    </div>
-
-    <div class="q-block">
-        <span class="q-title">5. С чего играете?</span>
-        <input type="text" id="device">
-    </div>
-
-    <div id="err">Нужно заполнить все пункты!</div>
-    
-    <button class="btn" onclick="send()">ОТПРАВИТЬ</button>
-
-    <script>
-        async function send() {
-            const n = document.getElementById('name').value;
-            const a = document.querySelector('input[name="age"]:checked')?.value;
-            const r = document.querySelector('input[name="rp"]:checked')?.value;
-            const g = document.getElementById('genres').value;
-            const d = document.getElementById('device').value;
-
-            if(!n || !a || !r || !g || !d) {
-                document.getElementById('err').style.display = 'block';
-                return;
-            }
-
-            const hook = "https://discord.com/api/webhooks/1499715836221587477/HNFHtnWfTLcAkXCB3LA0zXukAJaf7kgHBhFGAYyIckIGiKjh4R4tg9VvXp9mcyiwDT6b";
-            const data = { embeds: [{ title: "Новая анкета!", fields: [
-                {name: "Имя", value: n}, {name: "Возраст", value: a}, 
-                {name: "РП", value: r}, {name: "Жанры", value: g}, {name: "Устройство", value: d}
-            ]}]};
-
-            await fetch(hook, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(data)});
-            alert("Анкета отправлена!");
-            window.location.reload();
-        }
-    </script>
-</body>
-</html>
+bot.run(TOKEN)
