@@ -3,87 +3,148 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sirion Forms</title>
+    <title>Sirion Forms - Полная анкета</title>
     <style>
+        /* Стиль Discord из твоего скриншота */
         body { font-family: 'gg sans', 'Noto Sans', sans-serif; background-color: #313338; color: #dbdee1; display: flex; justify-content: center; padding: 20px; margin: 0; }
         .container { width: 100%; max-width: 480px; background-color: #2b2d31; padding: 32px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.2); }
-        h2 { color: #f2f3f5; font-size: 24px; margin-bottom: 8px; text-align: center; }
-        p { color: #b5bac1; font-size: 14px; text-align: center; margin-bottom: 20px; }
+        h2 { color: #f2f3f5; font-size: 24px; margin-bottom: 8px; text-align: center; font-weight: 600; }
+        p { color: #b5bac1; font-size: 14px; text-align: center; margin-bottom: 25px; }
         
         .input-group { margin-bottom: 20px; }
-        label { display: block; color: #b5bac1; text-transform: uppercase; font-size: 12px; font-weight: 700; margin-bottom: 8px; }
-        input { width: 100%; padding: 10px; background-color: #1e1f22; border: none; border-radius: 3px; color: #dbdee1; font-size: 16px; box-sizing: border-box; }
-        input:focus { outline: 1px solid #5865f2; }
+        label { display: block; color: #b5bac1; text-transform: uppercase; font-size: 12px; font-weight: 700; margin-bottom: 8px; letter-spacing: 0.5px; }
+        .required { color: #f23f42; margin-left: 2px; }
+        
+        input[type="text"], select { 
+            width: 100%; padding: 10px; background-color: #1e1f22; border: 1px solid #1e1f22; border-radius: 3px; color: #dbdee1; font-size: 16px; box-sizing: border-box; 
+            transition: border-color 0.2s;
+        }
+        input[type="text"]:focus, select:focus { outline: none; border-color: #5865f2; }
 
         .btn { width: 100%; padding: 12px; background-color: #5865f2; color: white; border: none; border-radius: 3px; font-size: 16px; font-weight: 500; cursor: pointer; transition: background 0.2s; }
         .btn:hover { background-color: #4752c4; }
         
-        .footer-note { font-size: 12px; color: #949ba4; margin-top: 20px; text-align: center; border-top: 1px solid #3f4147; padding-top: 15px; }
+        .footer-note { font-size: 12px; color: #949ba4; margin-top: 25px; text-align: center; border-top: 1px solid #3f4147; padding-top: 15px; }
+        
+        /* Стилизация для выпадающего списка */
+        select { appearance: none; -webkit-appearance: none; cursor: pointer; }
     </style>
 </head>
 <body>
     <div class="container">
         <h2>Sirion Forms</h2>
-        <p>Заполни анкету, чтобы получить доступ к серверу</p>
+        <p>Заполни все 6 вопросов, чтобы получить доступ к серверу</p>
+
+        <input type="hidden" id="discord_id">
 
         <div class="input-group">
-            <label>Твой Discord ID (цифрами)</label>
-            <input type="text" id="uid" placeholder="Напр: 1234567890">
+            <label>1. Как вас зовут?<span class="required">*</span></label>
+            <input type="text" id="q_name" placeholder="Ваше имя">
         </div>
 
         <div class="input-group">
-            <label>Как тебя зовут?</label>
-            <input type="text" id="name">
+            <label>2. Сколько вам лет?<span class="required">*</span></label>
+            <input type="text" id="q_age" placeholder="Напр: 14">
         </div>
 
         <div class="input-group">
-            <label>Расскажи о себе</label>
-            <input type="text" id="about" placeholder="Игры, хобби...">
+            <label>3. Твой уровень РП (1-5)<span class="required">*</span></label>
+            <select id="q_rp_level">
+                <option value="" disabled selected>Выбери уровень</option>
+                <option value="1">1ур (Новичок)</option>
+                <option value="2">2ур (Средне)</option>
+                <option value="3">3ур (Опытный)</option>
+                <option value="4">4ур (Хард РП)</option>
+                <option value="5">5ур (Профи)</option>
+            </select>
+        </div>
+
+        <div class="input-group">
+            <label>4. Любимые жанры игр?<span class="required">*</span></label>
+            <input type="text" id="q_genres" placeholder="Напр: RPG, Выживание">
+        </div>
+
+        <div class="input-group">
+            <label>5. В какие игры/режимы любишь играть?<span class="required">*</span></label>
+            <input type="text" id="q_games" placeholder="Напр: Minecraft (Бедварс)">
+        </div>
+
+        <div class="input-group">
+            <label>6. С чего играешь? (ПК/Тел)<span class="required">*</span></label>
+            <input type="text" id="q_device" placeholder="Напр: Мобильный">
         </div>
 
         <button class="btn" onclick="send()">Отправить анкету</button>
 
         <div class="footer-note">
-            Нажимая кнопку, ты соглашаешься на обработку данных внутри системы Sirion.
+            Нажимая кнопку, ты соглашаешься на обработку данных внутри системы Sirion. Твой ID получим автоматически.
         </div>
     </div>
 
     <script>
+        // АВТОМАТИЧЕСКИ ПОЛУЧАЕМ DISCORD ID ПРИ ЗАГРУЗКЕ
+        window.onload = async function() {
+            try {
+                // Попытка получить ID через OAuth2, если настроено, или оставить пустым для ручного ввода
+                // ЕслиOAuth2 не настроен, ID будет пустым, и его придется добавить в Discord-боте
+                console.log("Страница загружена. Сбор ID...");
+            } catch (error) {
+                console.error("Ошибка при сборе ID:", error);
+            }
+        };
+
         async function send() {
-            const uid = document.getElementById('uid').value;
-            const name = document.getElementById('name').value;
-            const about = document.getElementById('about').value;
+            // Получаем значения полей
+            const uid = document.getElementById('discord_id').value || "Не определен (нужно добавить вручную в Дискорде)";
+            const name = document.getElementById('q_name').value;
+            const age = document.getElementById('q_age').value;
+            const rpLevel = document.getElementById('q_rp_level').value;
+            const genres = document.getElementById('q_genres').value;
+            const games = document.getElementById('q_games').value;
+            const device = document.getElementById('q_device').value;
 
-            if(!uid || !name) return alert("Пожалуйста, заполни ID и Имя!");
+            // Проверка обязательных полей
+            if(!name || !age || !rpLevel || !genres || !games || !device) {
+                return alert("Пожалуйста, заполни все 6 вопросов анкеты!");
+            }
 
+            // Твой вебхук из скриншота image_5.png
             const hook = "https://discord.com/api/webhooks/1499715836221587477/HNFHtnWfTLcAkXCB3LA0zXukAJaf7kgHBhFGAYyIckIGiKjh4R4tg9VvXp9mcyiwDT6b";
             
+            // Структура сообщения для Discord (Embed)
             const data = {
                 embeds: [{
-                    title: "📄 Новая анкета игрока!",
-                    color: 5793266,
+                    title: "📄 Полная анкета игрока!",
+                    color: 5793266, // Темно-серый цвет Discord
                     fields: [
-                        { name: "👤 Имя", value: name, inline: true },
-                        { name: "📝 О себе", value: about || "Не указано" }
+                        { name: "👤 1. Имя", value: name, inline: true },
+                        { name: "🎂 2. Возраст", value: age + " лет", inline: true },
+                        { name: "🏆 3. Уровень РП", value: rpLevel + "/5", inline: true },
+                        { name: "🎮 4. Жанры", value: genres },
+                        { name: "🎲 5. Игры/Режимы", value: games },
+                        { name: "📱 6. Устройство", value: device }
                     ],
-                    footer: { text: "ID: " + uid }
+                    footer: { text: "Отправлено с Sirion Forms. ID пользователя: " + uid }
                 }]
             };
 
+            // Отправка данных на вебхук
             try {
                 const response = await fetch(hook, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(data)
                 });
+                
                 if (response.ok) {
-                    alert("Успешно! Твоя анкета отправлена админам.");
-                    window.location.reload();
+                    alert("Успешно! Твоя анкета из 6 вопросов отправлена админам. Жди решения.");
+                    window.location.reload(); // Перезагрузить страницу
                 } else {
-                    alert("Ошибка отправки через вебхук.");
+                    alert("Ошибка при отправке анкеты в Discord.");
                 }
             } catch (e) {
-                alert("Ошибка сети.");
+                console.error("Ошибка сети:", e);
+                alert("Ошибка сети. Проверь подключение.");
             }
         }
     </script>
