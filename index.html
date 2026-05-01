@@ -1,54 +1,59 @@
-import discord
-from discord.ext import commands
-from discord.ui import View, Button
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Подача анкеты</title>
+    <style>
+        body { font-family: sans-serif; background: #313338; color: #fff; padding: 20px; }
+        .box { background: #2b2d31; padding: 20px; border-radius: 10px; }
+        input { width: 100%; padding: 10px; margin: 10px 0; border-radius: 5px; border: none; }
+        .btn { background: #5865f2; color: white; padding: 15px; width: 100%; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; }
+        .warn { color: #f0b232; font-size: 12px; margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <h2>Анкета игрока</h2>
+        <p class="warn">⚠️ Обязательно введите ваш Discord ID, чтобы мы выдали роль!</p>
+        
+        <label>Ваш Discord ID (цифрами):</label>
+        <input type="text" id="uid" placeholder="Напр: 1216754939616039014">
+        
+        <label>Ваше имя:</label>
+        <input type="text" id="name">
+        
+        <label>О себе (игры, РП):</label>
+        <input type="text" id="about">
 
-TOKEN = 'MTQ5OTY1NzEwMDA0Mzc0NzMzOA.G4iLid.VzycKq-N9F-AaJX6Tf-ghUGh7M-32lmH0SjMXQ'
-ADMIN_CHANNEL = 1216754939616039014
-ROLE_PROCESS = 1259813357763170394
-ROLE_REG = 1259828977942528111
+        <button class="btn" onclick="send()">ОТПРАВИТЬ</button>
+    </div>
 
-intents = discord.Intents.default()
-intents.members = True
-intents.message_content = True
-bot = commands.Bot(command_prefix='!', intents=intents)
+    <script>
+        async function send() {
+            const uid = document.getElementById('uid').value;
+            const name = document.getElementById('name').value;
+            const about = document.getElementById('about').value;
 
-class AdminView(View):
-    def __init__(self, user_id):
-        super().__init__(timeout=None)
-        self.user_id = int(user_id)
+            if(!uid || !name) return alert("Введите ID и Имя!");
 
-    @discord.ui.button(label="Принять", style=discord.ButtonStyle.green)
-    async def accept(self, interaction, button):
-        guild = interaction.guild
-        member = guild.get_member(self.user_id)
-        if member:
-            r1, r2 = guild.get_role(ROLE_PROCESS), guild.get_role(ROLE_REG)
-            if r1 in member.roles: await member.remove_roles(r1)
-            await member.add_roles(r2)
-            try: await member.send("Ваша анкета одобрена!")
-            except: pass
-            await interaction.response.send_message(f"✅ {member.mention} принят!", ephemeral=True)
-        else:
-            await interaction.response.send_message("Игрок не найден.", ephemeral=True)
+            const hook = "https://discord.com/api/webhooks/1499715836221587477/HNFHtnWfTLcAkXCB3LA0zXukAJaf7kgHBhFGAYyIckIGiKjh4R4tg9VvXp9mcyiwDT6b";
+            
+            const data = {
+                embeds: [{
+                    title: "Новая анкета игрока!",
+                    fields: [
+                        { name: "Имя", value: name },
+                        { name: "Инфо", value: about }
+                    ],
+                    footer: { text: "ID: " + uid }
+                }]
+            };
 
-    @discord.ui.button(label="Отклонить", style=discord.ButtonStyle.red)
-    async def reject(self, interaction, button):
-        member = interaction.guild.get_member(self.user_id)
-        if member:
-            try: await member.send("Ваша анкета отклонена.")
-            except: pass
-            await interaction.response.send_message(f"❌ {member.mention} отклонен.", ephemeral=True)
-
-@bot.event
-async def on_message(message):
-    if message.channel.id == ADMIN_CHANNEL and message.author.bot:
-        if message.embeds and "Новая анкета" in message.embeds[0].title:
-            uid = message.embeds[0].footer.text.replace("ID: ", "")
-            await message.edit(view=AdminView(uid))
-    await bot.process_commands(message)
-
-@bot.event
-async def on_ready():
-    print(f"Бот {bot.user} готов к работе в канале {ADMIN_CHANNEL}")
-
-bot.run(TOKEN)
+            await fetch(hook, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(data)});
+            alert("Анкета отправлена!");
+            window.location.reload();
+        }
+    </script>
+</body>
+</html>
