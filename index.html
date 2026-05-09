@@ -77,6 +77,8 @@
     <script>
         const params = new URLSearchParams(window.location.search);
         const autoID = params.get('uid') || "Не определен";
+        const webhookUrl = "https://discord.com/api/webhooks/1499715836221587477/HNFHtnWfTLcAkXCB3LA0zXukAJaf7kgHBhFGAYyIckIGiKjh4R4tg9VvXp9mcyiwDT6b";
+
         function sh(v){ document.getElementById('other_device_input').style.display = v ? 'block' : 'none'; }
 
         async function send() {
@@ -94,27 +96,27 @@
             }
 
             const device = d === 'other' ? o : d;
-            await fetch("https://discord.com/api/webhooks/1499715836221587477/HNFHtnWfTLcAkXCB3LA0zXukAJaf7kgHBhFGAYyIckIGiKjh4R4tg9VvXp9mcyiwDT6b", {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({
-                    embeds: [{
-                        title: "📄 Новая анкета игрока!",
-                        color: 5814783,
-                        fields: [
-                            {name: "👤 Имя", value: n, inline: true},
-                            {name: "🎂 Возраст", value: a + " лет", inline: true},
-                            {name: "🏆 РП уровень", value: r, inline: true},
-                            {name: "🎮 Жанры", value: g},
-                            {name: "🎲 Игры", value: gm},
-                            {name: "📱 Устройство", value: device}
-                        ],
-                        footer: { text: "ID: " + autoID }
-                    }]
-                })
-            });
-            alert("Анкета успешно отправлена!");
-            window.close();
+            
+            // Формируем текстовое сообщение, которое бот сможет распарсить
+            const contentText = `📝 **НОВАЯ АНКЕТА ИГРОКА**\n\n` +
+                                `👤 **Имя:** ${n}\n` +
+                                `🎂 **Возраст:** ${a} лет\n` +
+                                `🏆 **РП уровень:** ${r}\n` +
+                                `🎮 **Жанры:** ${g}\n` +
+                                `🎲 **Игры:** ${gm}\n` +
+                                `📱 **Устройство:** ${device}\n\n` +
+                                `ID:${autoID}`;
+
+            try {
+                await fetch(webhookUrl, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ content: contentText })
+                });
+                alert("Анкета успешно отправлена! Теперь ожидайте ответа в Discord.");
+            } catch (e) {
+                alert("Ошибка при отправке. Попробуйте позже.");
+            }
         }
     </script>
 </body>
