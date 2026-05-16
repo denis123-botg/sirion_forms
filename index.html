@@ -25,19 +25,17 @@
         #other_device_input { display: none; margin-top: 10px; }
         .submit-btn { background-color: #5865f2; color: white; border: none; padding: 16px; width: 100%; border-radius: 28px; font-size: 16px; font-weight: 500; cursor: pointer; margin-top: 20px; margin-bottom: 40px; }
         #error_box { display: none; background: rgba(242, 63, 66, 0.1); border: 1px solid #f23f42; color: #f23f42; border-radius: 8px; padding: 12px; margin: 20px 0; text-align: center; }
-        
-        /* Стиль для сообщения об успехе */
-        .success-message { text-align: center; padding: 40px 20px; }
-        .success-message h2 { color: #4CAF50; margin-bottom: 10px; }
+        .success-screen { text-align: center; padding: 50px 20px; }
+        .success-screen h2 { color: #43b581; }
     </style>
 </head>
-<body id="body_content">
-    <div id="form_container">
+<body id="main-content">
+    <div id="form-wrapper">
         <div class="header"><div class="icon-menu">☰</div><h2>Основные вопросы</h2></div>
         <div class="warning-box"><div class="warning-icon">!</div><div class="warning-text">* Ваши данные конфиденциальны и будут использованы исключительно администрацией для рассмотрения заявки на вступление. Мы не передаем информацию третьим лицам.</div></div>
-
+        
         <div class="question"><label class="question-title">1. Как вас зовут? <span class="required">*</span></label><input type="text" id="q_name"></div>
-
+        
         <div class="question">
             <label class="question-title">2. Сколько вам лет? <span class="required">*</span></label>
             <div class="list-group">
@@ -50,7 +48,7 @@
                 <label class="list-item"><span>16 лет</span><input type="radio" name="age" value="16"></label>
             </div>
         </div>
-
+        
         <div class="question">
             <label class="question-title">3. Как вы оцениваете свое РП-поведение? <span class="required">*</span></label>
             <div class="list-group">
@@ -61,12 +59,28 @@
                 <label class="list-item"><span>5ур. (Профессионал)</span><input type="radio" name="rp" value="5ур (Профессионал)"></label>
             </div>
         </div>
-
+        
         <div class="question"><label class="question-title">4. Какие жанры игр у вас любимые? <span class="required">*</span></label><input type="text" id="q_genres"></div>
-        <div class="question"><label class="question-title">5. В какие игры/режимы любите играть? <span class="required">*</span></label><input type="text" id="q_games"></div>
+
+        <div class="question"><label class="question-title">5. Сколько часов в день вы играете? (В среднем) <span class="required">*</span></label><input type="text" id="q_hours" placeholder="Напр. 3-4 часа"></div>
 
         <div class="question">
-            <label class="question-title">6. С какого устройства играете? <span class="required">*</span></label>
+            <label class="question-title">6. Сколько дней в неделю вы играете? <span class="required">*</span></label>
+            <div class="list-group">
+                <label class="list-item"><span>Понедельник</span><input type="radio" name="days" value="Понедельник"></label>
+                <label class="list-item"><span>Вторник</span><input type="radio" name="days" value="Вторник"></label>
+                <label class="list-item"><span>Среда</span><input type="radio" name="days" value="Среда"></label>
+                <label class="list-item"><span>Четверг</span><input type="radio" name="days" value="Четверг"></label>
+                <label class="list-item"><span>Пятница</span><input type="radio" name="days" value="Пятница"></label>
+                <label class="list-item"><span>Суббота</span><input type="radio" name="days" value="Суббота"></label>
+                <label class="list-item"><span>Воскресенье</span><input type="radio" name="days" value="Воскресенье"></label>
+            </div>
+        </div>
+
+        <div class="question"><label class="question-title">7. В какие игры/режимы любите играть? <span class="required">*</span></label><input type="text" id="q_games"></div>
+        
+        <div class="question">
+            <label class="question-title">8. С какого устройства играете? <span class="required">*</span></label>
             <div class="list-group">
                 <label class="list-item"><span>Мобильное устройство</span><input type="radio" name="dev" value="Телефон" onclick="sh(0)"></label>
                 <label class="list-item"><span>Ноутбук</span><input type="radio" name="dev" value="Ноутбук" onclick="sh(0)"></label>
@@ -75,7 +89,7 @@
             </div>
             <input type="text" id="other_device_input" placeholder="Укажите ваше устройство">
         </div>
-
+        
         <div id="error_box">Нужно заполнить все пункты!</div>
         <button class="submit-btn" onclick="send()">Отправить</button>
     </div>
@@ -92,11 +106,14 @@
             const a = document.querySelector('input[name="age"]:checked')?.value;
             const r = document.querySelector('input[name="rp"]:checked')?.value;
             const g = document.getElementById('q_genres').value;
+            const hrs = document.getElementById('q_hours').value; // Новое
+            const dys = document.querySelector('input[name="days"]:checked')?.value; // Новое
             const gm = document.getElementById('q_games').value;
             const d = document.querySelector('input[name="dev"]:checked')?.value;
             const o = document.getElementById('other_device_input').value;
 
-            if(!n || !a || !r || !g || !gm || !d || (d==='other' && !o)) {
+            // Проверка на заполнение всех полей, включая новые
+            if(!n || !a || !r || !g || !hrs || !dys || !gm || !d || (d==='other' && !o)) {
                 document.getElementById('error_box').style.display = 'block';
                 return;
             }
@@ -108,6 +125,8 @@
                                 `🎂 **Возраст:** ${a} лет\n` +
                                 `🏆 **РП уровень:** ${r}\n` +
                                 `🎮 **Жанры:** ${g}\n` +
+                                `⏱️ **Часов в день:** ${hrs}\n` +
+                                `📅 **Дни активности:** ${dys}\n` +
                                 `🎲 **Игры:** ${gm}\n` +
                                 `📱 **Устройство:** ${device}\n\n` +
                                 `ID:${autoID}`;
@@ -120,9 +139,8 @@
                 });
 
                 if (response.ok) {
-                    // Заменяем содержимое формы на сообщение об успехе
-                    document.getElementById('body_content').innerHTML = `
-                        <div class="success-message">
+                    document.getElementById('main-content').innerHTML = `
+                        <div class="success-screen">
                             <h2>✅ Анкета подана!</h2>
                             <p>Вы можете закрыть сайт.</p>
                         </div>
