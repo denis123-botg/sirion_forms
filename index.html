@@ -19,9 +19,12 @@
         .list-group { background-color: #2b2d31; border-radius: 16px; overflow: hidden; }
         .list-item { display: flex; justify-content: space-between; align-items: center; padding: 14px 20px; border-bottom: 1px solid #3f4147; cursor: pointer; }
         .list-item:last-child { border-bottom: none; }
-        input[type="radio"] { appearance: none; width: 22px; height: 22px; border: 2px solid #b5bac1; border-radius: 50%; outline: none; cursor: pointer; position: relative; }
-        input[type="radio"]:checked { border-color: #5865f2; }
-        input[type="radio"]:checked::after { content: ""; position: absolute; width: 12px; height: 12px; background: #5865f2; border-radius: 50%; top: 3px; left: 3px; }
+        
+        /* Круглые кнопки */
+        input[type="radio"], .round-checkbox { appearance: none; width: 22px; height: 22px; border: 2px solid #b5bac1; border-radius: 50%; outline: none; cursor: pointer; position: relative; margin: 0; }
+        input[type="radio"]:checked, .round-checkbox:checked { border-color: #5865f2; }
+        input[type="radio"]:checked::after, .round-checkbox:checked::after { content: ""; position: absolute; width: 12px; height: 12px; background: #5865f2; border-radius: 50%; top: 3px; left: 3px; }
+
         #other_device_input { display: none; margin-top: 10px; }
         .submit-btn { background-color: #5865f2; color: white; border: none; padding: 16px; width: 100%; border-radius: 28px; font-size: 16px; font-weight: 500; cursor: pointer; margin-top: 20px; margin-bottom: 40px; }
         #error_box { display: none; background: rgba(242, 63, 66, 0.1); border: 1px solid #f23f42; color: #f23f42; border-radius: 8px; padding: 12px; margin: 20px 0; text-align: center; }
@@ -61,23 +64,21 @@
         </div>
         
         <div class="question"><label class="question-title">4. Какие жанры игр у вас любимые? <span class="required">*</span></label><input type="text" id="q_genres"></div>
-
-        <div class="question"><label class="question-title">5. Сколько часов в день вы играете? (В среднем) <span class="required">*</span></label><input type="text" id="q_hours" placeholder="Напр. 3-4 часа"></div>
+        <div class="question"><label class="question-title">5. В какие игры/режимы любите играть? <span class="required">*</span></label><input type="text" id="q_games"></div>
+        <div class="question"><label class="question-title">6. Сколько часов в день вы играете? (В среднем) <span class="required">*</span></label><input type="text" id="q_hours" placeholder="Напр. 3-4 часа"></div>
 
         <div class="question">
-            <label class="question-title">6. Сколько дней в неделю вы играете? <span class="required">*</span></label>
+            <label class="question-title">7. Сколько дней в неделю вы играете? (Можно выбрать несколько вариантов) <span class="required">*</span></label>
             <div class="list-group">
-                <label class="list-item"><span>Понедельник</span><input type="radio" name="days" value="Понедельник"></label>
-                <label class="list-item"><span>Вторник</span><input type="radio" name="days" value="Вторник"></label>
-                <label class="list-item"><span>Среда</span><input type="radio" name="days" value="Среда"></label>
-                <label class="list-item"><span>Четверг</span><input type="radio" name="days" value="Четверг"></label>
-                <label class="list-item"><span>Пятница</span><input type="radio" name="days" value="Пятница"></label>
-                <label class="list-item"><span>Суббота</span><input type="radio" name="days" value="Суббота"></label>
-                <label class="list-item"><span>Воскресенье</span><input type="radio" name="days" value="Воскресенье"></label>
+                <label class="list-item"><span>Понедельник</span><input type="checkbox" class="round-checkbox" name="days" value="Понедельник"></label>
+                <label class="list-item"><span>Вторник</span><input type="checkbox" class="round-checkbox" name="days" value="Вторник"></label>
+                <label class="list-item"><span>Среда</span><input type="checkbox" class="round-checkbox" name="days" value="Среда"></label>
+                <label class="list-item"><span>Четверг</span><input type="checkbox" class="round-checkbox" name="days" value="Четверг"></label>
+                <label class="list-item"><span>Пятница</span><input type="checkbox" class="round-checkbox" name="days" value="Пятница"></label>
+                <label class="list-item"><span>Суббота</span><input type="checkbox" class="round-checkbox" name="days" value="Суббота"></label>
+                <label class="list-item"><span>Воскресенье</span><input type="checkbox" class="round-checkbox" name="days" value="Воскресенье"></label>
             </div>
         </div>
-
-        <div class="question"><label class="question-title">7. В какие игры/режимы любите играть? <span class="required">*</span></label><input type="text" id="q_games"></div>
         
         <div class="question">
             <label class="question-title">8. С какого устройства играете? <span class="required">*</span></label>
@@ -106,28 +107,30 @@
             const a = document.querySelector('input[name="age"]:checked')?.value;
             const r = document.querySelector('input[name="rp"]:checked')?.value;
             const g = document.getElementById('q_genres').value;
-            const hrs = document.getElementById('q_hours').value; // Новое
-            const dys = document.querySelector('input[name="days"]:checked')?.value; // Новое
             const gm = document.getElementById('q_games').value;
+            const hrs = document.getElementById('q_hours').value;
+            
+            const selectedDays = Array.from(document.querySelectorAll('input[name="days"]:checked')).map(cb => cb.value);
+            
             const d = document.querySelector('input[name="dev"]:checked')?.value;
             const o = document.getElementById('other_device_input').value;
 
-            // Проверка на заполнение всех полей, включая новые
-            if(!n || !a || !r || !g || !hrs || !dys || !gm || !d || (d==='other' && !o)) {
+            if(!n || !a || !r || !g || !gm || !hrs || selectedDays.length === 0 || !d || (d==='other' && !o)) {
                 document.getElementById('error_box').style.display = 'block';
                 return;
             }
 
             const device = d === 'other' ? o : d;
+            const dysText = selectedDays.join(', ');
             
             const contentText = `📝 **НОВАЯ АНКЕТА ИГРОКА**\n\n` +
                                 `👤 **Имя:** ${n}\n` +
                                 `🎂 **Возраст:** ${a} лет\n` +
                                 `🏆 **РП уровень:** ${r}\n` +
                                 `🎮 **Жанры:** ${g}\n` +
-                                `⏱️ **Часов в день:** ${hrs}\n` +
-                                `📅 **Дни активности:** ${dys}\n` +
                                 `🎲 **Игры:** ${gm}\n` +
+                                `⏱️ **Часов в день:** ${hrs}\n` +
+                                `📅 **Дни активности:** ${dysText}\n` +
                                 `📱 **Устройство:** ${device}\n\n` +
                                 `ID:${autoID}`;
 
