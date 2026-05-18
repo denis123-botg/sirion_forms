@@ -60,6 +60,17 @@
                 <label class="list-item"><span>5ур. (Профессионал)</span><input type="radio" name="rp" value="5ур (Профессионал)"></label>
             </div>
         </div>
+
+        <div class="question">
+            <label class="question-title">3.1. Как вы работаете в команде? <span class="required">*</span></label>
+            <div class="list-group">
+                <label class="list-item"><span>Плохо</span><input type="radio" name="teamwork" value="Плохо"></label>
+                <label class="list-item"><span>Средне</span><input type="radio" name="teamwork" value="Средне"></label>
+                <label class="list-item"><span>Хорошо</span><input type="radio" name="teamwork" value="Хорошо"></label>
+                <label class="list-item"><span>Выше среднего</span><input type="radio" name="teamwork" value="Выше среднего"></label>
+                <label class="list-item"><span>Идеально</span><input type="radio" name="teamwork" value="Идеально"></label>
+            </div>
+        </div>
         
         <div class="question"><label class="question-title">4. Какие жанры игр у вас любимые? <span class="required">*</span></label><input type="text" id="q_genres"></div>
         <div class="question"><label class="question-title">5. В какие игры/режимы любите играть? <span class="required">*</span></label><input type="text" id="q_games"></div>
@@ -104,6 +115,7 @@
             const n = document.getElementById('q_name').value;
             const a = document.querySelector('input[name="age"]:checked')?.value;
             const r = document.querySelector('input[name="rp"]:checked')?.value;
+            const tm = document.querySelector('input[name="teamwork"]:checked')?.value;
             const g = document.getElementById('q_genres').value;
             const gm = document.getElementById('q_games').value;
             const hrs = document.getElementById('q_hours').value;
@@ -113,7 +125,7 @@
             const d = document.querySelector('input[name="dev"]:checked')?.value;
             const o = document.getElementById('other_device_input').value;
 
-            if(!n || !a || !r || !g || !gm || !hrs || selectedDays.length === 0 || !d || (d==='other' && !o)) {
+            if(!n || !a || !r || !tm || !g || !gm || !hrs || selectedDays.length === 0 || !d || (d==='other' && !o)) {
                 document.getElementById('error_box').style.display = 'block';
                 return;
             }
@@ -125,6 +137,7 @@
                                 `👤 **Имя:** ${n}\n` +
                                 `🎂 **Возраст:** ${a} лет\n` +
                                 `🏆 **РП уровень:** ${r}\n` +
+                                `👥 **Работа в команде:** ${tm}\n` +
                                 `🎮 **Жанры:** ${g}\n` +
                                 `🎲 **Игры:** ${gm}\n` +
                                 `⏱️ **Часов в день:** ${hrs}\n` +
