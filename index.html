@@ -107,7 +107,9 @@
     <script>
         const params = new URLSearchParams(window.location.search);
         const autoID = params.get('uid') || "Не определен";
-        const webhookUrl = "https://discord.com/api/webhooks/1499715836221587477/HNFHtnWfTLcAkXCB3LA0zXukAJaf7kgHBhFGAYyIckIGiKjh4R4tg9VvXp9mcyiwDT6b";
+        
+        // СЮДА ВСТАВЬ ПОЛНУЮ ССЫЛКУ НА ТВОЕГО БОТА НА RENDER (НАПРИМЕР, https://sirion-bot.onrender.com/submit)
+        const botUrl = "https://ТВОЙ-ПРОЕКТ-НА-RENDER.onrender.com/submit";
 
         function sh(v){ document.getElementById('other_device_input').style.display = v ? 'block' : 'none'; }
 
@@ -133,23 +135,25 @@
             const device = d === 'other' ? o : d;
             const dysText = selectedDays.join(', ');
             
-            const contentText = `📝 **НОВАЯ АНКЕТА ИГРОКА**\n\n` +
-                                `👤 **Имя:** ${n}\n` +
-                                `🎂 **Возраст:** ${a} лет\n` +
-                                `🏆 **РП уровень:** ${r}\n` +
-                                `👥 **Работа в команде:** ${tm}\n` +
-                                `🎮 **Жанры:** ${g}\n` +
-                                `🎲 **Игры:** ${gm}\n` +
-                                `⏱️ **Часов в день:** ${hrs}\n` +
-                                `📅 **Дни активности:** ${dysText}\n` +
-                                `📱 **Устройство:** ${device}\n\n` +
-                                `ID:${autoID}`;
+            // Создаем чистый JSON-пакет с данными ответов для твоего aiohttp Python-бота
+            const payload = {
+                uid: autoID,
+                name: n,
+                age: a,
+                rp_level: r,
+                teamwork: tm,
+                genres: g,
+                games: gm,
+                hours_per_day: hrs,
+                active_days: dysText,
+                device_type: device
+            };
 
             try {
-                const response = await fetch(webhookUrl, {
+                const response = await fetch(botUrl, {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({ content: contentText })
+                    body: JSON.stringify(payload)
                 });
 
                 if (response.ok) {
@@ -163,7 +167,7 @@
                     throw new Error();
                 }
             } catch (e) {
-                alert("Ошибка при отправке. Попробуйте позже.");
+                alert("Ошибка при отправке бота. Попробуйте позже.");
             }
         }
     </script>
